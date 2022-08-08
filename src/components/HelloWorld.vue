@@ -1,64 +1,65 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-typescript" target="_blank" rel="noopener">typescript</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+
+    <h2>{{text}}</h2>
+    
+    <input type="text" v-model="input" @click="testFun">
   </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { Options, Vue, createDecorator } from 'vue-class-component';
+
+type customObj = { code: number, name: string, age: number }
+interface customInterface { readonly code: number, name: string, age: number }
+
+const Log = createDecorator((options, key) => {
+  const originMet = options.methods[key]
+
+  options.methods[key] = function wrapperMethod(...args: any[]) {
+    return originMet.apply(this, args)
+  }
+})
 
 @Options({
   props: {
     msg: String
   }
 })
+
 export default class HelloWorld extends Vue {
   msg!: string
+  text = 0
+  input = 0
+
+  testFun(): void {
+    this.showMe(this.input)
+      .then((data: customObj) => { 
+        console.log(data);
+      })
+  }
+
+
+  @Log
+  showMe(str: number): Promise<customObj> {
+
+    let sth: customObj = { code: 1, name: 'xxx', age: str }
+    let oth: customInterface = { code: 1, name: 'xxx', age: str }
+
+    this.text = this.input
+
+
+    return new Promise((resolve: (data: customObj) => void, reject: (err: string) => void) => {
+      if (sth) {
+        resolve(sth)
+      } else {
+        const errMsg = '未知错误'
+        reject(errMsg)
+      }
+    })
+  }
+
+
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
