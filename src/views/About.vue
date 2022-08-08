@@ -47,7 +47,7 @@
 
 
     listScroll(e: Event){
-      const target = e.target as HTMLBodyElement
+      const target = e.target as HTMLElement
       let sTop = target.scrollTop,
           sHeight = target.scrollHeight
 
