@@ -1,5 +1,6 @@
 import { innerData } from "../types"
 
+// 生成长数据
 const longData: Array<innerData> = []
 const randomStr = 'QAZWSXEDCRFVTGBYHNUJMIKOLP'
 
