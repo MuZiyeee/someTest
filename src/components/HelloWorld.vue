@@ -11,13 +11,13 @@
 <script lang="ts">
 import { Options, Vue, createDecorator } from 'vue-class-component';
 
-type customObj = { code: number, name: string, age: number }
-interface customInterface { readonly code: number, name: string, age: number }
+type customObj = { code: number, name: string, msg: string }
 
 const Log = createDecorator((options, key) => {
   const originMet = options.methods[key]
 
   options.methods[key] = function wrapperMethod(...args: any[]) {
+    // 在这里返回原始函数的执行结果 不影响被装饰器包裹的函数返回值
     return originMet.apply(this, args)
   }
 })
@@ -30,8 +30,8 @@ const Log = createDecorator((options, key) => {
 
 export default class HelloWorld extends Vue {
   msg!: string
-  text = 0
-  input = 0
+  text = '0'
+  input = '0'
 
   testFun(): void {
     this.showMe(this.input)
@@ -42,19 +42,17 @@ export default class HelloWorld extends Vue {
 
 
   @Log
-  showMe(str: number): Promise<customObj> {
+  showMe(str: string): Promise<customObj> {
 
-    let sth: customObj = { code: 1, name: 'xxx', age: str }
-    let oth: customInterface = { code: 1, name: 'xxx', age: str }
+    let sth: customObj = { code: 1, name: 'xxx', msg: str }
 
     this.text = this.input
 
-
     return new Promise((resolve: (data: customObj) => void, reject: (err: string) => void) => {
-      if (sth) {
+      if (sth.msg) {
         resolve(sth)
       } else {
-        const errMsg = '未知错误'
+        const errMsg = 'msg为空'
         reject(errMsg)
       }
     })

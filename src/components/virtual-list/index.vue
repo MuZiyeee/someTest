@@ -22,10 +22,10 @@
   export default class VirtualList extends Vue{
     originList: Array<innerData> = longData   //原始数据
     dataList: Array<innerData> = []   //渲染数据
-    sliceIndex = 0    //当前渲染的数据 首条下标
-    size = 50   //渲染的数据数量
-    tempSize = 10   //每次触发靠近顶边/底边时 向前/向后获取的数据数量
-    loadOffset = 50   //刷新阈值 距离顶边/底边多少像素触发获取新数据
+    sliceIndex = 0      //当前渲染的数据 首条下标
+    size = 50           //渲染的数据数量
+    tempSize = 10       //每次触发靠近顶边/底边时 向前/向后获取的数据数量
+    loadOffset = 50     //刷新阈值 距离顶边/底边多少像素触发获取新数据
     listHeight = 600    //列表容器高度
 
     // 如果 列表刷新时 不受影响的元素的高度之和 小于 容器高度减去刷新阈值 会连续触发刷新导致屏闪 => (size - tempSize) * singleHeight < listHeight - loadOffset
@@ -74,9 +74,19 @@
     border: 1px solid #a45839;
     overflow: auto;
 
-    // 隐藏滚动条
     &::-webkit-scrollbar{
-      display: none;
+      // 隐藏滚动条
+      // display: none;
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-track{
+      background-color: rgb(192, 255, 224);
+    }
+
+    &::-webkit-scrollbar-thumb{
+      background-color: #42b989;
+      border-radius: 4px;
     }
 
     .list-item{
