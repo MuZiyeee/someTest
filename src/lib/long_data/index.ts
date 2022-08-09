@@ -4,7 +4,7 @@ import { innerData } from "../types"
 const longData: Array<innerData> = []
 const randomStr = 'QAZWSXEDCRFVTGBYHNUJMIKOLP'
 
-for (let index = 0; index < 5000; index++) {
+for (let index = 0; index < 20000; index++) {
     const obj: innerData = {
         id: index,
         name: randomStr[Math.floor(Math.random() * 26)],

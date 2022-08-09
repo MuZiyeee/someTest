@@ -25,56 +25,40 @@
     sliceIndex = 0    //当前渲染的数据 首条下标
     size = 50   //渲染的数据数量
     tempSize = 10   //每次触发靠近顶边/底边时 向前/向后获取的数据数量
-    loadOffset = 50   //距离顶边/底边多少像素触发获取新数据
+    loadOffset = 50   //刷新阈值 距离顶边/底边多少像素触发获取新数据
     listHeight = 600    //列表容器高度
 
-    // 使用唯一键(如数据id)作为列表项的key时不会刷新整个列表所以不需要手动设置列表滚动位置 也就不需要单个元素高度
-    // singleHeight = 38   //单条数据 li元素高度
+    // 如果 列表刷新时 不受影响的元素的高度之和 小于 容器高度减去刷新阈值 会连续触发刷新导致屏闪 => (size - tempSize) * singleHeight < listHeight - loadOffset
+    // singleHeight = 40   //单条数据 li元素高度 值应为 .lisit-item 元素的高度
 
     listScroll(e: Event): void{
       const target = e.target as HTMLElement,   //事件目标
-          sTop = target.scrollTop,    //列表垂直滚动位置
-          sHeight = target.scrollHeight   //列表垂直滚动总高度
+            sTop = target.scrollTop,            //列表垂直滚动位置
+            sHeight = target.scrollHeight       //列表垂直滚动总高度
 
-      // 触发靠近顶边 向上滚动 向前获取数据
+      // 触发靠近顶边 且 当前渲染的不是第一组数据 向前获取数据
       if (sTop <= this.loadOffset && this.sliceIndex > 0) {
-        this.getScrollUp()
-        // target.scrollTop += 380
+        this.scrollUpdate(-1)
         
-      // 触发靠近底边 向下滚动 向后获取数据
-      }else if (sHeight - sTop < this.loadOffset + this.listHeight) {
-        this.getScrollDown()
-        // target.scrollTop -= 380
+      // 触发靠近底边 且 当前渲染的不是最后一组数据 向后获取数据
+      }else if (sHeight - sTop < this.loadOffset + this.listHeight && this.sliceIndex + this.size < this.originList.length) {
+        this.scrollUpdate(1)
       }
     }
 
     init(): void{
+      if(this.originList.length < this.size) {
+        this.size = this.originList.length
+      }
       // 从原始数据中截取一定数量(this.size)的数据渲染
       this.dataList = this.originList.slice(this.sliceIndex, this.sliceIndex + this.size)
     }
 
-    getScrollDown(): void{
-      // 获取一定数量(this.tempSize)的缓冲数据添加到列表尾部
-      let tempArr: Array<innerData> = this.originList.slice(this.sliceIndex + this.size, this.sliceIndex + this.size + this.tempSize)
+    scrollUpdate(num: number){
       // 更改渲染数据的起始下标
-      this.sliceIndex += this.tempSize
-
-      // 从首部剪去一定数量(this.tempsize)的数据
-      this.dataList.splice(0, this.tempSize)
-      // 向尾部添加数据
-      this.dataList.push(...tempArr)
-    }
-
-    getScrollUp(): void{
-      // 获取一定数量(this.tempSize)的缓冲数据添加到列表首部
-      let tempArr: Array<innerData> = this.originList.slice(this.sliceIndex - this.tempSize, this.sliceIndex)
-      // 更改渲染数据的起始下标
-      this.sliceIndex -= this.tempSize
-
-      // 从尾部剪去一定数量(this.tempsize)的数据
-      this.dataList.splice(-this.tempSize, this.dataList.length - 1)
-      // 向首部添加数据
-      this.dataList.unshift(...tempArr)
+      this.sliceIndex += (this.tempSize * num)
+      // 设置应当渲染的数据
+      this.dataList = this.originList.slice(this.sliceIndex, this.sliceIndex + this.size)
     }
     
     mounted(): void {
@@ -96,9 +80,9 @@
     }
 
     .list-item{
-      padding: 10px;
+      line-height: 40px;
       text-align: left;
-      font-size: 16px;
+      font-size: 18px;
 
       span{
         border: 1px dashed pink;
