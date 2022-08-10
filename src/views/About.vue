@@ -1,17 +1,13 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
-
-    <!-- <div class="img-wrap">
-      <img src="../assets/微信图片_20211109191404.jpg" alt="" ref="theImg">
-    </div> -->
+    <h1>This is VirtualList page</h1>
 
     <VirtualList/>
   </div>
 </template>
 <script lang="ts">
   import { Options, Vue } from "vue-class-component";
-  import VirtualList from "@/components/virtual-list/index.vue";
+  import VirtualList from "@/components/VirtualList.vue";
 
   @Options({
     components: {

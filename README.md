@@ -1,4 +1,8 @@
 # space01
+环境版本参考值
+ > node 14.15.1  
+ > npm 6.14.8  
+ > @vue/cli 4.5.19
 
 ## Project setup
 ```

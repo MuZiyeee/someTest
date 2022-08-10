@@ -3,15 +3,19 @@
     <h1>{{ msg }}</h1>
 
     <h2>{{text}}</h2>
-    
-    <input type="text" v-model="input" @click="testFun">
+  
+    <div class="input-wrap">
+      msg: 
+      <input type="text" v-model="input">
+      <button @click="testFun">此处</button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue, createDecorator } from 'vue-class-component';
 
-type customObj = { code: number, name: string, msg: string }
+type customObj = { code: number, name?: string, msg: string }
 
 const Log = createDecorator((options, key) => {
   const originMet = options.methods[key]
@@ -23,6 +27,7 @@ const Log = createDecorator((options, key) => {
 })
 
 @Options({
+  name: 'Decorators',
   props: {
     msg: String
   }
@@ -44,7 +49,7 @@ export default class HelloWorld extends Vue {
   @Log
   showMe(str: string): Promise<customObj> {
 
-    let sth: customObj = { code: 1, name: 'xxx', msg: str }
+    let sth: customObj = { code: 1, name: this.$options.name, msg: str }
 
     this.text = this.input
 
@@ -61,3 +66,12 @@ export default class HelloWorld extends Vue {
 
 }
 </script>
+<style lang="scss">
+  .input-wrap{
+    margin-top: 10px;
+
+    button{
+      margin-left: 10px;
+    }
+  }
+</style>

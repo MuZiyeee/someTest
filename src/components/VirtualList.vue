@@ -1,7 +1,7 @@
 <template>
-  <div class="long-list" @scroll="listScroll($event)" ref="list">
+  <div class="long-list" @scroll="listScroll" ref="list">
     <ul>
-      <li v-for="item in dataList" :key="item.id" class="list-item">
+      <li v-for="item in dataList" :key="item.id"  :class="{'list-item':true, 'list-item-hight-light': !(item.id % 10)}">
         <span>id: {{item.id}}</span>
 
         <span>name: {{item.name}}</span>
@@ -24,17 +24,18 @@
     dataList: Array<innerData> = []   //渲染数据
     sliceIndex = 0      //当前渲染的数据 首条下标
     size = 50           //渲染的数据数量
-    tempSize = 10       //每次触发靠近顶边/底边时 向前/向后获取的数据数量
-    loadOffset = 50     //刷新阈值 距离顶边/底边多少像素触发获取新数据
+    tempSize = 10       //缓冲数量 每次触发靠近顶边/底边时 向前/向后获取的数据数量
+    loadOffset = 50     //刷新阈值 距离顶边/底边多少像素触发渲染新数据
     listHeight = 600    //列表容器高度
 
-    // 如果 列表刷新时 不受影响的元素的高度之和 小于 容器高度减去刷新阈值 会连续触发刷新导致屏闪 => (size - tempSize) * singleHeight < listHeight - loadOffset
-    // singleHeight = 40   //单条数据 li元素高度 值应为 .lisit-item 元素的高度
+    // 当前存在问题 如果 列表刷新时 不受影响的元素的高度之和 小于 容器高度减去刷新阈值 会连续触发刷新导致屏闪 --> (size - tempSize) * singleHeight < listHeight - loadOffset
+    // singleHeight = 40   //单条数据 li元素高度 值应为 .list-item 元素的高度
 
     listScroll(e: Event): void{
       const target = e.target as HTMLElement,   //事件目标
             sTop = target.scrollTop,            //列表垂直滚动位置
             sHeight = target.scrollHeight       //列表垂直滚动总高度
+      ;
 
       // 触发靠近顶边 且 当前渲染的不是第一组数据 向前获取数据
       if (sTop <= this.loadOffset && this.sliceIndex > 0) {
@@ -43,10 +44,12 @@
       // 触发靠近底边 且 当前渲染的不是最后一组数据 向后获取数据
       }else if (sHeight - sTop < this.loadOffset + this.listHeight && this.sliceIndex + this.size < this.originList.length) {
         this.scrollUpdate(1)
+        
       }
     }
 
     init(): void{
+      // 如果原始数据数量 小于 设定的渲染数量 减小渲染数量
       if(this.originList.length < this.size) {
         this.size = this.originList.length
       }
@@ -70,7 +73,7 @@
 <style lang="scss">
   .long-list{
     max-height: 600px;
-    width: 600px;
+    min-width: 600px;
     border: 1px solid #a45839;
     overflow: auto;
 
@@ -93,6 +96,14 @@
       line-height: 40px;
       text-align: left;
       font-size: 18px;
+      margin-left: 10px;
+
+      &.list-item-hight-light{
+        span{
+          border-width: 2px;
+          font-weight: bold
+        }
+      }
 
       span{
         border: 1px dashed pink;

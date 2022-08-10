@@ -1,12 +1,14 @@
 <template>
   <div id="nav">
-    <router-link to="/">Decorators</router-link> |
-    <router-link to="/about">VirtualList</router-link>
+    <router-link to="/">Decorators 装饰器</router-link> |
+    <router-link to="/About">VirtualList 虚拟列表</router-link>
   </div>
   <router-view/>
 </template>
 
 <style lang="scss">
+@import '@/styles/public.scss';
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
