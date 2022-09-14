@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>This is VirtualList page</h1>
+    <h1>下面是虚拟列表组件</h1>
 
     <VirtualList/>
   </div>
@@ -16,10 +16,33 @@
   })
 
   export default class About extends Vue {
-
+    beforeCreate(): void{
+      console.log('beforeC')
+    }
+    created(): void{
+      console.log('created')
+    }
+    beforeMount(): void{
+      console.log('beforeM')
+    }
+    mounted(): void{
+      console.log('mounted')
+    }
+    beforeUpdate(): void{
+      console.log('beforeUpdate');
+    }
+    updated(): void{
+      console.log('updated');
+    }
+    beforeUnmount(): void{
+      console.log('beforeUnmount');
+    }
+    unmounted(): void{
+      console.log('unmounted');
+    }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   .about{
     display: flex;
     flex-direction: column;

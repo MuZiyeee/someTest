@@ -1,0 +1,33 @@
+// 自定义滚动条 -----------\
+::-webkit-scrollbar{
+    width: 5px;
+}
+
+::-webkit-scrollbar-track{
+    background-color: rgb(192, 255, 224);
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: #42b989;
+    border-radius: 4px;
+}
+// ----------------------/
+
+// 自定义按钮 -----------\
+.my-btn{
+    cursor: pointer;
+    transition: all .15s;
+
+    &-primary{
+        border: none;
+        border-radius: 4px;
+        padding: 10px 12px;
+        background-color: #42b989;
+        color: #fff;
+
+        &:hover{
+            opacity: .85;
+        }
+    }
+}
+// --------------------/
